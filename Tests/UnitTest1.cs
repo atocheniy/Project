@@ -23,7 +23,7 @@ namespace Tests
         public void Test2()
         {
             Assert.Throws<FileNotFoundException>(() => dictionary.Create("C:\\Новая папка"));
-        }//Test2
+        }///Test2
 
         //Обработка несуществующей папки
         [Test]
