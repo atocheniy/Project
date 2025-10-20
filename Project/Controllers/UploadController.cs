@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Project.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("upload")]
     public class UploadController : ControllerBase
     {
         private readonly FrequencyService _service;
@@ -14,7 +14,7 @@ namespace Project.Controllers
             _service = new FrequencyService();
         }
 
-        [HttpPost("upload")]
+        [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -36,5 +36,6 @@ namespace Project.Controllers
 
             return PhysicalFile(path, "application/octet-stream", filename);
         }
+
     }
 }
