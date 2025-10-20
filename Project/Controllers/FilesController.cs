@@ -45,6 +45,7 @@ namespace Project.Controllers
                 return RedirectToAction(nameof(ResultPage));
             }
 
+            ViewBag.ErrorMessage = "Файл не выбран.";
             return View("Index");
         }
 
