@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Files Page";
+}
+
+<div>
+    <h1 class="display-4">Files Page</h1>
+    <form method="post" enctype="multipart/form-data" asp-controller="Files" asp-action="Upload">
+        <div class="form-group">
+            <p>Выберите файл для загрузки:</p>
+            <input type="file" name="file" />
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Upload File" class="btn btn-primary" />
+        </div>
+    </form>
+</div>

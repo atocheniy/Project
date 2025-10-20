@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Upload Result";
+}
+
+<h1 class="display-4">Upload Successful</h1>
+
+@if (TempData["UploadedFileName"] != null)
+{
+    <p>Файл @TempData["UploadedFileName"] был загружен.</p>
+}
