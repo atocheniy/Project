@@ -1,35 +1,54 @@
-﻿using System.Collections;
+﻿using Project.Models;
+using System.Collections;
 using System.Collections.Generic;
+using Project.Services;
 
 namespace Tests
 {
     public class Tests
     {
+        private FrequencyService _frequencyService = new FrequencyService();
+
         [SetUp]
         public void Setup()
         {
         }
 
-        //Обработка пустого текста
+
         [Test]
         public void Test1()
         {
-            var words = dictionary.ExtractWords("");
-            Assert.That(words.Count(), Is.EqualTo(0));
+            var text = "";
+
+            var res = _frequencyService.Analyze(text);
+            Assert.That(res.Count, Is.EqualTo(0));
         }//Test1
 
-        //Обработка пустой папки
+
         [Test]
         public void Test2()
         {
-            Assert.Throws<FileNotFoundException>(() => dictionary.Create("C:\\Новая папка"));
-        }///Test2
+            var text = "hello world";
 
-        //Обработка несуществующей папки
+            var res = _frequencyService.Analyze(text);
+            Assert.That(res.Count, Is.EqualTo(2));
+            Assert.That(res[0].Word, Is.EqualTo("hello"));
+            Assert.That(res[0].Count, Is.EqualTo(1));
+            Assert.That(res[1].Word, Is.EqualTo("world"));
+            Assert.That(res[1].Count, Is.EqualTo(1));
+        }//Test2
+
+
+
         [Test]
         public void Test3()
         {
-            Assert.Throws<DirectoryNotFoundException>(() => dictionary.Create("C:\\Новая папка_2"));
+            var text = "hello world hello HELLO";
+
+            var res = _frequencyService.Analyze(text);
+            Assert.That(res.Count, Is.EqualTo(2));
+            Assert.That(res[0].Count, Is.EqualTo(3));
+            Assert.That(res[1].Count, Is.EqualTo(1));
         }//Test3
 
     }
