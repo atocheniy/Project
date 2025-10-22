@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Text.Json
+@{
     ViewData["Title"] = "Upload Result";
 }
 
@@ -7,22 +8,37 @@
 @if (TempData["UploadedFileName"] != null)
 {
     var fileName = TempData["UploadedFileName"].ToString();
-    var data = TempData["Data"];
+    var dataJson = TempData["Data"] as string;
+
     <p>Файл @TempData["UploadedFileName"] был загружен.</p>
 
     <br />
     <h2>Результат:</h2>
-    @if (TempData["Data"] != null)
+
+    @if (!string.IsNullOrEmpty(dataJson))
     {
-        <p>
-            {data}
-        </p>
+        var frequencyData = JsonSerializer.Deserialize<List<FrequencyResult>>(dataJson);
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Слово</th>
+                    <th>Частота</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in frequencyData)
+                {
+                    <tr>
+                        <td>@item.Word</td>
+                        <td>@item.Count</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
-    @if (TempData["Data"] == null)
+    else
     {
-        <p>
-            Произошла ошибка
-        </p>
+        <p class="text-danger">Произошла ошибка при получении данных.</p>
     }
 
     <br />

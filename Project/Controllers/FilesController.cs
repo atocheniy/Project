@@ -1,15 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Project.Helpers;
+using Project.Services;
+using System.Text.Json;
 
 namespace Project.Controllers
 {
     public class FilesController : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly FrequencyService _service;
 
         public FilesController(IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
+            _service = new FrequencyService();
         }
 
         // GET: FilesController
@@ -41,8 +46,12 @@ namespace Project.Controllers
                     await file.CopyToAsync(stream);
                 }
 
+                var text = await FileHelper.ReadTextAsync(file);
+                var result = _service.Analyze(text);
+                var filename = FileHelper.SaveToCsv(result);
+
                 TempData["UploadedFileName"] = file.FileName;
-                // TempData["Data"] = dictionary.Analyze(file);
+                TempData["Data"] = JsonSerializer.Serialize(result);
 
                 return RedirectToAction(nameof(ResultPage));
             }
@@ -51,19 +60,21 @@ namespace Project.Controllers
             return View("Index");
         }
 
-        public async Task<IActionResult> DownloadFile(string fileName)
+        [HttpGet("download/{filename}")]
+        public async Task<IActionResult> DownloadFile(string filename)
         {
-            if (string.IsNullOrEmpty(fileName)) return Content("Имя файла не указано.");
 
-            var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-            var filePath = Path.Combine(uploadsFolder, fileName);
+            var path = Path.Combine("wwwroot/results", filename);
+            if (!System.IO.File.Exists(path))
+                return NotFound();
 
-            if (!System.IO.File.Exists(filePath))
+
+            if (!System.IO.File.Exists(path))
             {
                 return NotFound();
             }
 
-            return PhysicalFile(filePath, "application/octet-stream", fileName);
+            return PhysicalFile(path, "application/octet-stream", filename);
         }
 
         // GET: FilesController/Details/5
