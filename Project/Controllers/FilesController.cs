@@ -42,11 +42,28 @@ namespace Project.Controllers
                 }
 
                 TempData["UploadedFileName"] = file.FileName;
+                // TempData["Data"] = dictionary.Analyze(file);
+
                 return RedirectToAction(nameof(ResultPage));
             }
 
             ViewBag.ErrorMessage = "Файл не выбран.";
             return View("Index");
+        }
+
+        public async Task<IActionResult> DownloadFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return Content("Имя файла не указано.");
+
+            var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            return PhysicalFile(filePath, "application/octet-stream", fileName);
         }
 
         // GET: FilesController/Details/5
