@@ -30,3 +30,5 @@ packages/
 *.swp
 *.DS_Store
 Thumbs.db
+/Project/wwwroot/results
+/Project/wwwroot/uploads

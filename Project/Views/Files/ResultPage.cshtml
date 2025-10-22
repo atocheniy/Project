@@ -7,7 +7,9 @@
 
 @if (TempData["UploadedFileName"] != null)
 {
-    var fileName = TempData["UploadedFileName"].ToString();
+    var originalFileName = TempData["UploadedFileName"].ToString();
+    var resultFileName = TempData["ResultFileName"]?.ToString();
+
     var dataJson = TempData["Data"] as string;
 
     <p>Файл @TempData["UploadedFileName"] был загружен.</p>
@@ -44,7 +46,7 @@
     <br />
     <a asp-controller="Files"
        asp-action="DownloadFile"
-       asp-route-fileName="@fileName"
+       asp-route-fileName="@resultFileName"
        class="btn btn-success">
         Скачать файл
     </a>

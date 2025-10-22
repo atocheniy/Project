@@ -48,9 +48,10 @@ namespace Project.Controllers
 
                 var text = await FileHelper.ReadTextAsync(file);
                 var result = _service.Analyze(text);
-                var filename = FileHelper.SaveToCsv(result);
+                var resultFileName = FileHelper.SaveToCsv(result);
 
                 TempData["UploadedFileName"] = file.FileName;
+                TempData["ResultFileName"] = resultFileName;
                 TempData["Data"] = JsonSerializer.Serialize(result);
 
                 return RedirectToAction(nameof(ResultPage));
@@ -60,20 +61,18 @@ namespace Project.Controllers
             return View("Index");
         }
 
-        [HttpGet("download/{filename}")]
         public async Task<IActionResult> DownloadFile(string filename)
         {
+            if (string.IsNullOrEmpty(filename)) return Content("Имя файла не указано.");
 
-            var path = Path.Combine("wwwroot/results", filename);
-            if (!System.IO.File.Exists(path))
-                return NotFound();
-
+            var resultsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "results");
+            var path = Path.Combine(resultsFolder, filename);
 
             if (!System.IO.File.Exists(path))
             {
                 return NotFound();
             }
-
+            
             return PhysicalFile(path, "application/octet-stream", filename);
         }
 
