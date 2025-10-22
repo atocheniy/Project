@@ -6,9 +6,21 @@
 
 @if (TempData["UploadedFileName"] != null)
 {
+    var fileName = TempData["UploadedFileName"].ToString();
     <p>Файл @TempData["UploadedFileName"] был загружен.</p>
+
+    <br />
+    <a asp-controller="Files"
+       asp-action="DownloadFile"
+       asp-route-fileName="@fileName"
+       class="btn btn-success">
+        Скачать файл
+    </a>
+
+    <br />
 }
 
+<br />
 <p>
     <a asp-controller="Files" asp-action="Index" class="btn btn-secondary">Загрузить еще один файл</a>
 </p>

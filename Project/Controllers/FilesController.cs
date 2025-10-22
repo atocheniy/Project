@@ -49,6 +49,21 @@ namespace Project.Controllers
             return View("Index");
         }
 
+        public async Task<IActionResult> DownloadFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return Content("Имя файла не указано.");
+
+            var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            return PhysicalFile(filePath, "application/octet-stream", fileName);
+        }
+
         // GET: FilesController/Details/5
         public ActionResult Details(int id)
         {
