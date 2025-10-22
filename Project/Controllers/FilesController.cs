@@ -42,6 +42,8 @@ namespace Project.Controllers
                 }
 
                 TempData["UploadedFileName"] = file.FileName;
+                // TempData["Data"] = dictionary.Analyze(file);
+
                 return RedirectToAction(nameof(ResultPage));
             }
 
